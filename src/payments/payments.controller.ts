@@ -1,4 +1,13 @@
-import { Body, Controller, Post, Get, Param, UseGuards, Request, Headers } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Get,
+  Param,
+  UseGuards,
+  Request,
+  Headers,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiCreatedResponse,
@@ -28,9 +37,13 @@ export class PaymentsController {
   @ApiBearerAuth('bearerAuth')
   @UseGuards(JwtAuthGuard)
   @Get('verify/:reference')
-  @ApiCreatedResponse({ description: 'Payment verified successfully', type: Payment })
-  verify(@Param('reference') reference: string): Promise<Payment> {
-    return this.paymentsService.verify(reference);
+  @ApiCreatedResponse({
+    description: 'Payment verified successfully',
+    type: Payment,
+  })
+  verify(@Param('reference') reference: string, @Request() req: any): Promise<Payment> {
+    const userId = req.user?.id;
+    return this.paymentsService.verify(reference, userId);
   }
 
   @Post('webhook')
@@ -41,7 +54,6 @@ export class PaymentsController {
     if (signature) {
       await this.paymentsService.handleWebhook(payload, signature);
     }
-    // Always return 200 OK to Chapa so it knows you received the webhook
     return { status: 'success' };
   }
 }

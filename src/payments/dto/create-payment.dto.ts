@@ -11,14 +11,6 @@ export class CreatePaymentDto {
   @IsString()
   currency: string;
 
-  @ApiProperty({ description: 'Unique transaction reference', example: 'txn_12345' })
-  @IsString()
-  reference: string;
-
-  @ApiProperty({ description: 'User ID responsible for the payment', example: 1 })
-  @IsOptional()
-  @IsNumber()
-  userId?: number;
 
   @ApiProperty({ description: 'Return URL after payment', example: 'https://example.com/return' })
   @IsOptional()

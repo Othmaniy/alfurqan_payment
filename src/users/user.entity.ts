@@ -17,6 +17,16 @@ export class User {
   @Column({ unique: true })
   phone: string;
 
+  @ApiProperty({ description: 'User first name' })
+  @IsString()
+  @Column({ nullable: true })
+  firstName: string;
+
+  @ApiProperty({ description: 'User last name' })
+  @IsString()
+  @Column({ nullable: true })
+  lastName: string;
+
   @ApiProperty({ description: 'Hashed password', minLength: 6 })
   @IsString()
   @MinLength(6)
