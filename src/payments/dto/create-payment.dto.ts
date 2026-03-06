@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString, Min, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, Min, IsOptional, IsEmail } from 'class-validator';
 
 export class CreatePaymentDto {
   @ApiProperty({ description: 'Amount in the smallest currency unit', example: 100.5 })
@@ -19,4 +19,9 @@ export class CreatePaymentDto {
   @IsOptional()
   @IsNumber()
   userId?: number;
+
+  @ApiProperty({ description: 'Return URL after payment', example: 'https://example.com/return' })
+  @IsOptional()
+  @IsString()
+  return_url?: string;
 }

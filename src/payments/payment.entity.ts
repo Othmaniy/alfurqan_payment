@@ -4,41 +4,49 @@ import {
   Column,
   ManyToOne,
   CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
 import { User } from '../users/user.entity';
-
+// create enum for payment status
+export enum PaymentStatus {
+  PENDING = 'PENDING',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
+}
 @Entity()
 export class Payment {
-  @ApiProperty({ description: 'Primary key' })
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ApiProperty({ description: 'Amount to pay' })
-  @IsNumber()
-  @Min(0)
   @Column('decimal', { precision: 10, scale: 2 })
   amount: number;
 
-  @ApiProperty({ description: 'Currency code (e.g. ETB, USD)' })
-  @IsString()
   @Column({ default: 'ETB' })
   currency: string;
 
-  @ApiProperty({ description: 'Unique reference provided by payment gateway' })
-  @IsString()
   @Column({ unique: true })
-  reference: string;
+  tx_ref: string;
 
-  @ApiProperty({ description: 'Current status of the payment' })
-  @IsString()
-  @Column({ default: 'pending' })
-  status: string;
+  @Column({ nullable: true })
+  ref_id: string;
 
-  @ApiProperty({ description: 'Timestamp when the payment record was created' })
+  @Column({ nullable: true })
+  checkout_url: string;
+
+  @Column({
+    type: 'enum',
+    enum: PaymentStatus,
+    default: PaymentStatus.PENDING,
+  })
+  status: PaymentStatus;
+
   @CreateDateColumn()
   createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 
   @ManyToOne(() => User, (user) => user.payments, { nullable: false })
   user: User;
