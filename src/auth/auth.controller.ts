@@ -23,11 +23,12 @@ export class AuthController {
     description: 'Invalid input or user already exists',
   })
   async register(@Body() dto: CreateUserDto) {
-    const user = await this.authService.register(dto);
-    const { password, ...rest } = user as any;
+    const { user, access_token } = await this.authService.register(dto);
+    const { password, ...userData } = user as any;
     return {
       message: 'Registration successful',
-      user: rest,
+      user: userData,
+      access_token,
     };
   }
 
